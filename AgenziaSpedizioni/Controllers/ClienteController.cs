@@ -13,6 +13,7 @@ namespace AgenziaSpedizioni.Controllers
         {
             // ottengo la lista dei clienti
             List<Cliente> clienti = GetClientiPrivato();
+            ViewBag.msgSuccess = TempData["msgSuccess"];
             return View(clienti);
         }
 
@@ -32,6 +33,11 @@ namespace AgenziaSpedizioni.Controllers
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(collection);
+            }
+
             using (SqlConnection conn = Connection.GetConn())
             {
                 try
@@ -63,8 +69,8 @@ namespace AgenziaSpedizioni.Controllers
                     conn.Close();
                 }
 
-                ViewBag.msgSuccess = "Cliente" + collection["Nome"] + " inserito correttamente";
-                return View("Index");
+                TempData["msgSuccess"] = "Cliente" + collection["Nome"] + " inserito correttamente";
+                return RedirectToAction("Index");
             }
 
         }

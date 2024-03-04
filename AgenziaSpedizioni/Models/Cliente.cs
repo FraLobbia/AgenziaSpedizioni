@@ -15,9 +15,11 @@ namespace AgenziaSpedizioni.Models
 
 
         [Display(Name = "Codice Fiscale")]
+        [StringLength(16, ErrorMessage = "Il campo CodiceFiscale non può superare i 16 caratteri.")]
         public string CodiceFiscale { get; set; }
 
         [Display(Name = "Partita Iva")]
+        [StringLength(11, ErrorMessage = "Il campo PartitaIva non può superare i 11 caratteri.")]
         public string PartitaIva { get; set; }
     }
 }
