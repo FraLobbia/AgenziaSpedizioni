@@ -9,9 +9,9 @@ namespace AgenziaSpedizioni.Models
         [ScaffoldColumn(false)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Il campo ClienteId è obbligatorio.")]
-        [ScaffoldColumn(false)]
-        public int ClienteId { get; set; }
+        [Required(ErrorMessage = "Il campo Nome Cliente è obbligatorio.")]
+        [Display(Name = "Nome Cliente")]
+        public int ClienteId { get; set; } // Da impostare come dropdown
 
         [Required(ErrorMessage = "Il campo NumeroIdentificativo è obbligatorio.")]
         [StringLength(50, ErrorMessage = "Il campo NumeroIdentificativo non può superare i 50 caratteri.")]

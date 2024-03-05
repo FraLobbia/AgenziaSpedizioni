@@ -639,12 +639,14 @@
     <Content Include="Views\Cliente\Edit.cshtml" />
     <Content Include="Views\Cliente\Delete.cshtml" />
     <Content Include="Views\Cliente\Details.cshtml" />
+    <Content Include="Views\Spedizione\Index.cshtml" />
+    <Content Include="Views\Spedizione\Details.cshtml" />
+    <Content Include="Views\Spedizione\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CustomValidation\" />
     <Folder Include="Views\Aggiornamenti\" />
-    <Folder Include="Views\Spedizione\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

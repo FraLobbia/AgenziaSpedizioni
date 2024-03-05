@@ -9,51 +9,48 @@
 
 <h3>Sicuro di voler cancellare questo cliente?</h3>
 <div>
-    <h4>Cliente</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TipoCliente)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TipoCliente)
-        </dd>
-
-        <dt id="lblCodiceFiscale">
-            @Html.DisplayNameFor(model => model.CodiceFiscale)
-        </dt>
-
-        <dd  id="CodiceFiscale">
-            @Html.DisplayFor(model => model.CodiceFiscale)
-        </dd>
-
-        <dt id="lblPartitaIva">
-            @Html.DisplayNameFor(model => model.PartitaIva)
-        </dt>
-
-        <dd  id="PartitaIva">
-            @Html.DisplayFor(model => model.PartitaIva)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions">
-            <input type="submit" value="Delete" class="btn btn-danger" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
         </div>
-    }
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.TipoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.TipoCliente, new { @id = "TipoCliente" })
+            @Html.ValidationMessageFor(model => model.TipoCliente, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CodiceFiscale, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblCodiceFiscale" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CodiceFiscale, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PartitaIva, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPartitaIva" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.PartitaIva, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PartitaIva, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions">
+        <input type="submit" value="Delete" class="btn btn-danger" />
+    </div>
+}
 </div>
 
 @section Scripts {

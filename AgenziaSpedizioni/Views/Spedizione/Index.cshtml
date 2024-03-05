@@ -1,0 +1,92 @@
+﻿@model IEnumerable<AgenziaSpedizioni.Models.Spedizione>
+
+@{
+    ViewBag.Title = "Elenco spedizioni";
+    ViewBag.msgErrore = TempData["msgErrore"];
+    ViewBag.msgSuccess = TempData["msgSuccess"];
+}
+
+<h1>Elenco delle spedizione</h1>
+
+
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+
+@Html.ActionLink("Crea nuova spedizione", "Create", null, new { @class = "btn btn-success" })
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.NumeroIdentificativo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataSpedizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Peso)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CittaDestinataria)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IndirizzoDestinatario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NominativoDestinatario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Costo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataConsegnaPrevista)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumeroIdentificativo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataSpedizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Peso)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CittaDestinataria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IndirizzoDestinatario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NominativoDestinatario)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Costo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataConsegnaPrevista)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning m-0" })
+                @Html.ActionLink("Details", "Details", new { id = item.Id }, new { @class = "btn btn-secondary m-0" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger m-0" })
+            </td>
+        </tr>
+    }
+
+</table>

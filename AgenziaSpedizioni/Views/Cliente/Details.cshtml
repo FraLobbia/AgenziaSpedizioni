@@ -11,50 +11,49 @@
 <div>
     <h4>Cliente</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nome)
-        </dt>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nome)
-        </dd>
+        <div class="form-group">
+            @Html.LabelFor(model => model.TipoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10" id="TipoCliente">
+                @Html.DisplayFor(model => model.TipoCliente)
+                @Html.ValidationMessageFor(model => model.TipoCliente, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.TipoCliente)
-        </dt>
+        <div class="form-group" id="CodiceFiscale">
+            @Html.LabelFor(model => model.CodiceFiscale, htmlAttributes: new { @class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DisplayFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CodiceFiscale, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.TipoCliente)
-        </dd>
+        <div class="form-group" id="PartitaIva">
+            @Html.LabelFor(model => model.PartitaIva, htmlAttributes: new { @class = "control-label col-md-2"})
+            <div class="col-md-10" >
+                @Html.DisplayFor(model => model.PartitaIva, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PartitaIva, "", new { @class = "text-danger" })
+            </div>
+        </div>
 
-        <dt id="lblCodiceFiscale">
-            @Html.DisplayNameFor(model => model.CodiceFiscale)
-
-        <dd id="CodiceFiscale">
-            @Html.DisplayFor(model => model.CodiceFiscale)
-        </dd>
-
-        <dt id="lblPartitaIva">
-            @Html.DisplayNameFor(model => model.PartitaIva)
-        </dt>
-
-        <dd id="PartitaIva">
-            @Html.DisplayFor(model => model.PartitaIva)
-        </dd>
-
-    </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
-</p>
+
+@Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
 <script>
     $(document).ready(function () {
-        var tipoCliente = $("#TipoCliente").val();
+        var tipoCliente = $("#TipoCliente").text();
         if (tipoCliente == "Privato") {
             $("#lblCodiceFiscale").show();
             $("#CodiceFiscale").show();

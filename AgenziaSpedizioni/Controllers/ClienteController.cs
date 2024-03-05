@@ -288,39 +288,35 @@ namespace AgenziaSpedizioni.Controllers
         {
             // crea lista di clienti
             List<Cliente> clienti = new List<Cliente>();
-            // ottieni connessione
-            SqlConnection conn = Connection.GetConn();
 
-            try
-            {
-                conn.Open();
-                // crea comando
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti", conn);
-                // esegui comando
-                SqlDataReader reader = cmd.ExecuteReader();
-                // leggi risultati
-                while (reader.Read())
+            using (SqlConnection conn = Connection.GetConn())
+                try
                 {
-                    // crea oggetto cliente
-                    Cliente cliente = new Cliente();
-                    cliente.Id = Convert.ToInt32(reader["Id"]);
-                    cliente.Nome = reader["Nome"].ToString();
-                    cliente.TipoCliente = reader["TipoCliente"].ToString();
-                    cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
-                    cliente.PartitaIva = reader["PartitaIva"].ToString();
-                    // aggiungi cliente alla lista
-                    clienti.Add(cliente);
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti", conn);
+                    // esegui comando
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    // leggi risultati
+                    while (reader.Read())
+                    {
+                        // crea oggetto cliente
+                        Cliente cliente = new Cliente();
+                        cliente.Id = Convert.ToInt32(reader["Id"]);
+                        cliente.Nome = reader["Nome"].ToString();
+                        cliente.TipoCliente = reader["TipoCliente"].ToString();
+                        cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
+                        cliente.PartitaIva = reader["PartitaIva"].ToString();
+                        // aggiungi cliente alla lista
+                        clienti.Add(cliente);
 
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = "Errore: " + ex.Message;
-            }
-            finally
-            {
-                conn.Close();
-            }
+                catch (Exception ex)
+                {
+                    TempData["msgErrore"] = "Errore: " + ex.Message;
+                }
+
 
             return clienti;
         }
@@ -354,15 +350,10 @@ namespace AgenziaSpedizioni.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.Message = "Errore: " + ex.Message;
-                }
-                finally
-                {
-                    conn.Close();
+                    TempData["msgErrore"] = "Errore: " + ex.Message;
                 }
 
             return cliente;
         }
-
     }
 }
