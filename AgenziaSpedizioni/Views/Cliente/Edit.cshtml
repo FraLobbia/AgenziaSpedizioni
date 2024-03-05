@@ -1,24 +1,10 @@
 ﻿@model AgenziaSpedizioni.Models.Cliente
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Edit";
 }
 
-<h1>Aggiungi un nuovo cliente</h1>
-
-
-@if (ViewBag.msgErrore != null)
-{
-    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
-        @ViewBag.msgErrore
-    </div>
-}
-@if (ViewBag.msgSuccess != null)
-{
-    <div class="alert alert-success fw-bold text-success my-3" role="alert">
-        @ViewBag.msgSuccess
-    </div>
-}
+<h1>Modifica cliente</h1>
 
 @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
@@ -27,6 +13,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
+        <h4>Cliente</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
@@ -41,11 +28,11 @@
             @Html.LabelFor(model => model.TipoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("TipoCliente", new SelectList(new List<Object>
-                     {
-                         new { value = "", text = "Scegli tipo cliente", disabled = "disabled", selected = "selected" },
-                         new { value = "Privato", text = "Privato" },
-                         new { value = "Azienda", text = "Azienda" }
-                     }, "value", "text"), htmlAttributes: new { @class = "form-control" })
+                  {
+                      //new { value = "", text = "Scegli tipo cliente", disabled = "disabled", selected = "selected" },
+                      new { value = "Privato", text = "Privato", selected = "selected" },
+                      new { value = "Azienda", text = "Azienda" }
+                  }, "value", "text"), htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TipoCliente, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -68,7 +55,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-success" />
+                <input type="submit" value="Salva" class="btn btn-warning" />
             </div>
         </div>
     </div>
@@ -76,33 +63,39 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    <script>
-        // Script per nascondere tutto al caricamento della pagina
+
+        <script>
         $(document).ready(function () {
-            $('#CodiceFiscale').hide();
-            $('#PartitaIva').hide();
-            $('#lblCodiceFiscale').hide(); 
-            $('#lblPartitaIva').hide(); 
+            var tipoCliente = $("#TipoCliente").val();
+            if (tipoCliente == "Privato") {
+                $("#lblCodiceFiscale").show();
+                $("#CodiceFiscale").show();
+                $("#lblPartitaIva").hide();
+                $("#PartitaIva").hide();
+            }
+            else {
+                $("#lblCodiceFiscale").hide();
+                $("#CodiceFiscale").hide();
+                $("#lblPartitaIva").show();
+                $("#PartitaIva").show();
+            }
         });
 
-        // Script per nascondere e mostrare i campi CodiceFiscale e PartitaIva 
-        // in base alla scelta del TipoCliente
-        $(document).ready(function () {
-            $('#TipoCliente').change(function () {
-                if ($('#TipoCliente').val() == "Privato") {
-                    $('#CodiceFiscale').show();
-                    $('#PartitaIva').hide();
-                    $('#lblCodiceFiscale').show(); 
-                    $('#lblPartitaIva').hide(); 
-                }
-                else {
-                    $('#CodiceFiscale').hide();
-                    $('#PartitaIva').show();
-                    $('#lblCodiceFiscale').hide(); 
-                    $('#lblPartitaIva').show(); 
-                }
-            });
+        $("#TipoCliente").change(function () {
+            var tipoCliente = $("#TipoCliente").val();
+            if (tipoCliente == "Privato") {
+                $("#lblCodiceFiscale").show();
+                $("#CodiceFiscale").show();
+                $("#lblPartitaIva").hide();
+                $("#PartitaIva").hide();
+            }
+            else {
+                $("#lblCodiceFiscale").hide();
+                $("#CodiceFiscale").hide();
+                $("#lblPartitaIva").show();
+                $("#PartitaIva").show();
+            }
         });
-    </script>
+        </script>
+  
 }
-

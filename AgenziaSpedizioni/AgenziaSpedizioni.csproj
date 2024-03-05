@@ -636,9 +636,13 @@
     <Content Include="Style\_bootstrapOverrides.scss" />
     <Content Include="Style\Style.scss" />
     <Content Include="Views\Cliente\Index.cshtml" />
+    <Content Include="Views\Cliente\Edit.cshtml" />
+    <Content Include="Views\Cliente\Delete.cshtml" />
+    <Content Include="Views\Cliente\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="CustomValidation\" />
     <Folder Include="Views\Aggiornamenti\" />
     <Folder Include="Views\Spedizione\" />
   </ItemGroup>

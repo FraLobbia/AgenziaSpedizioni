@@ -8,11 +8,18 @@ namespace AgenziaSpedizioni.Controllers
 {
     public class ClienteController : Controller
     {
+        //                _____   _______   _____    ____    _   _    _____ 
+        //       /\      / ____| |__   __| |_   _|  / __ \  | \ | |  / ____|
+        //      /  \    | |         | |      | |   | |  | | |  \| | | (___  
+        //     / /\ \   | |         | |      | |   | |  | | | . ` |  \___ \ 
+        //    / ____ \  | |____     | |     _| |_  | |__| | | |\  |  ____) |
+        //   /_/    \_\  \_____|    |_|    |_____|  \____/  |_| \_| |_____/ 
+
         // GET: Cliente
         public ActionResult Index()
         {
             // ottengo la lista dei clienti
-            List<Cliente> clienti = GetClientiPrivato();
+            List<Cliente> clienti = GetListaClienti();
             ViewBag.msgSuccess = TempData["msgSuccess"];
             return View(clienti);
         }
@@ -20,7 +27,8 @@ namespace AgenziaSpedizioni.Controllers
         // GET: Cliente/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            Cliente cliente = GetClienteById(id);
+            return View(cliente);
         }
 
         // GET: Cliente/Create
@@ -31,11 +39,11 @@ namespace AgenziaSpedizioni.Controllers
 
         // POST: Cliente/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        public ActionResult Create(Cliente formCliente)
         {
             if (!ModelState.IsValid)
             {
-                return View(collection);
+                return View(formCliente);
             }
 
             using (SqlConnection conn = Connection.GetConn())
@@ -43,17 +51,36 @@ namespace AgenziaSpedizioni.Controllers
                 try
                 {
                     conn.Open();
+                    string query = "";
+                    if (formCliente.TipoCliente == "Privato")
+                    {
+                        query = ("" +
+                          "INSERT INTO Clienti " +
+                          "(Nome, TipoCliente, CodiceFiscale) " +
+                          "VALUES (@Nome, @TipoCliente, @CodiceFiscale)");
+
+                    }
+                    else if (formCliente.TipoCliente == "Azienda")
+                    {
+                        query = ("" +
+                          "INSERT INTO Clienti " +
+                          "(Nome, TipoCliente, PartitaIva) " +
+                          "VALUES (@Nome, @TipoCliente, @PartitaIva)");
+                    }
                     // crea comando
-                    SqlCommand cmd = new SqlCommand("" +
-                        "INSERT INTO Clienti " +
-                        "(Nome, TipoCliente, CodiceFiscale, PartitaIva) " +
-                        "VALUES (@Nome, @TipoCliente, @CodiceFiscale, @PartitaIva)", conn);
+                    SqlCommand cmd = new SqlCommand(query, conn);
 
                     // aggiungi parametri
-                    cmd.Parameters.AddWithValue("@Nome", collection["Nome"]);
-                    cmd.Parameters.AddWithValue("@TipoCliente", collection["TipoCliente"]);
-                    cmd.Parameters.AddWithValue("@CodiceFiscale", collection["CodiceFiscale"]);
-                    cmd.Parameters.AddWithValue("@PartitaIva", collection["PartitaIva"]);
+                    cmd.Parameters.AddWithValue("@Nome", formCliente.Nome);
+                    cmd.Parameters.AddWithValue("@TipoCliente", formCliente.TipoCliente);
+                    if (formCliente.TipoCliente == "Privato")
+                    {
+                        cmd.Parameters.AddWithValue("@CodiceFiscale", formCliente.CodiceFiscale);
+                    }
+                    else if (formCliente.TipoCliente == "Azienda")
+                    {
+                        cmd.Parameters.AddWithValue("@PartitaIva", formCliente.PartitaIva);
+                    }
 
                     // esegui comando
                     cmd.ExecuteNonQuery();
@@ -62,14 +89,14 @@ namespace AgenziaSpedizioni.Controllers
                 {
                     conn.Close();
                     ViewBag.msgErrore = "Errore: " + ex.Message;
-                    return View(collection);
+                    return View(formCliente);
                 }
                 finally
                 {
                     conn.Close();
                 }
 
-                TempData["msgSuccess"] = "Cliente" + collection["Nome"] + " inserito correttamente";
+                TempData["msgSuccess"] = "Cliente" + formCliente.Nome + " inserito correttamente";
                 return RedirectToAction("Index");
             }
 
@@ -78,51 +105,186 @@ namespace AgenziaSpedizioni.Controllers
         // GET: Cliente/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            Cliente cliente = GetClienteById(id);
+            return View(cliente);
         }
 
         // POST: Cliente/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
-            try
+            if (!ModelState.IsValid)
             {
-                // TODO: Add update logic here
+                return View(collection);
+            }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            using (SqlConnection conn = Connection.GetConn())
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("" +
+                        "UPDATE Clienti " +
+                        "SET Nome = @Nome, " +
+                        "TipoCliente = @TipoCliente, " +
+                        "CodiceFiscale = @CodiceFiscale, " +
+                        "PartitaIva = @PartitaIva " +
+                        "WHERE Id = @Id", conn);
+
+                    // aggiungi parametri
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@Nome", collection["Nome"]);
+                    cmd.Parameters.AddWithValue("@TipoCliente", collection["TipoCliente"]);
+                    cmd.Parameters.AddWithValue("@CodiceFiscale", collection["CodiceFiscale"]);
+                    cmd.Parameters.AddWithValue("@PartitaIva", collection["PartitaIva"]);
+
+                    // esegui comando
+                    cmd.ExecuteNonQuery();
+                    TempData["msgSuccess"] = "Cliente " + collection["Nome"] + " modificato correttamente";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.msgErrore = "Errore: " + ex.Message;
+                    return View();
+                }
         }
 
         // GET: Cliente/Delete/5
         public ActionResult Delete(int id)
         {
-            return View();
+            Cliente cliente = GetClienteById(id);
+            return View(cliente);
         }
 
         // POST: Cliente/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
-            try
-            {
-                // TODO: Add delete logic here
+            using (SqlConnection conn = Connection.GetConn())
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Clienti WHERE Id = @Id", conn);
+                    // aggiungi parametri
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    // esegui comando
+                    cmd.ExecuteNonQuery();
+                    TempData["msgSuccess"] = "Cliente eliminato correttamente";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.msgErrore = "Errore: " + ex.Message;
+                    return View();
+                }
+        }
 
-                return RedirectToAction("Index");
-            }
-            catch
+        //    __  __   ______   _______    ____    _____    _____ 
+        //   |  \/  | |  ____| |__   __|  / __ \  |  __ \  |_   _|
+        //   | \  / | | |__       | |    | |  | | | |  | |   | |  
+        //   | |\/| | |  __|      | |    | |  | | | |  | |   | |  
+        //   | |  | | | |____     | |    | |__| | | |__| |  _| |_ 
+        //   |_|  |_| |______|    |_|     \____/  |_____/  |_____|
+
+        // Metodo per verificare se il nome del cliente è disponibile
+        // Richiede il parametro Nome in formato stringa
+        // Restituisce un valore booleano in formato JSON 
+        public ActionResult IsNomeClienteAvailable()
+        {
+            string nome = Request["Nome"];
+            using (SqlConnection conn = Connection.GetConn())
             {
-                return View();
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM Clienti WHERE Nome = @Nome";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Nome", nome);
+                        int count = (int)cmd.ExecuteScalar(); // Restituisce solo la prima colonna della prima riga, ignorando le altre colonne e righe
+                        if (count > 0)
+                        {
+                            return Json(false, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                catch (SqlException e)
+                {
+                    return Json("Errore di connessione al database: " + e.Message, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // Metodo per verifica se il codice fiscale è disponibile
+        // Richiede il parametro CodiceFiscale in formato stringa
+        // Restituisce un valore booleano in formato JSON
+        public ActionResult IsCodiceFiscaleAvailable()
+        {
+            string codiceFiscale = Request["CodiceFiscale"];
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM Clienti WHERE CodiceFiscale = @CodiceFiscale";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CodiceFiscale", codiceFiscale);
+                        int count = (int)cmd.ExecuteScalar(); // Restituisce solo la prima colonna della prima riga, ignorando le altre colonne e righe
+                        if (count > 0)
+                        {
+                            return Json(false, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                catch (SqlException e)
+                {
+                    return Json("Errore di connessione al database: " + e.Message, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // Metodo per verifica se la partita iva è disponibile
+        // Richiede il parametro PartitaIva in formato stringa
+        // Restituisce un valore booleano in formato JSON
+        public ActionResult IsPartitaIvaAvailable()
+        {
+            string partitaIva = Request["PartitaIva"];
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT COUNT(*) FROM Clienti WHERE PartitaIva = @PartitaIva";
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@PartitaIva", partitaIva);
+                        int count = (int)cmd.ExecuteScalar(); // Restituisce solo la prima colonna della prima riga, ignorando le altre colonne e righe
+                        if (count > 0)
+                        {
+                            return Json(false, JsonRequestBehavior.AllowGet);
+                        }
+                    }
+                }
+                catch (SqlException e)
+                {
+                    return Json("Errore di connessione al database: " + e.Message, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(true, JsonRequestBehavior.AllowGet);
             }
         }
 
         // Metodo per ottenere la lista dei clienti dal db dalla tabella Cliente
         // Non richiede parametri
         // Restituisce una lista di oggetti di tipo Cliente
-        public List<Cliente> GetClientiPrivato()
+        public List<Cliente> GetListaClienti()
         {
             // crea lista di clienti
             List<Cliente> clienti = new List<Cliente>();
@@ -161,6 +323,45 @@ namespace AgenziaSpedizioni.Controllers
             }
 
             return clienti;
+        }
+
+        // Metodo per ottenere il cliente tramite id
+        // Richiede il parametro id in formato intero
+        // Restituisce un oggetto di tipo Cliente
+        public Cliente GetClienteById(int id)
+        {
+            Cliente cliente = new Cliente();
+            // ottieni connessione
+            using (SqlConnection conn = Connection.GetConn())
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti WHERE Id = @Id", conn);
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    // esegui comando
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    // leggi risultati
+                    while (reader.Read())
+                    {
+                        // crea oggetto cliente
+                        cliente.Id = Convert.ToInt32(reader["Id"]);
+                        cliente.Nome = reader["Nome"].ToString();
+                        cliente.TipoCliente = reader["TipoCliente"].ToString();
+                        cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
+                        cliente.PartitaIva = reader["PartitaIva"].ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ViewBag.Message = "Errore: " + ex.Message;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+
+            return cliente;
         }
 
     }

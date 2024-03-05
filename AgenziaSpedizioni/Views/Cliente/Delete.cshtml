@@ -1,0 +1,93 @@
+﻿@model AgenziaSpedizioni.Models.Cliente
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h1>Delete</h1>
+@Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
+
+<h3>Sicuro di voler cancellare questo cliente?</h3>
+<div>
+    <h4>Cliente</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoCliente)
+        </dd>
+
+        <dt id="lblCodiceFiscale">
+            @Html.DisplayNameFor(model => model.CodiceFiscale)
+        </dt>
+
+        <dd  id="CodiceFiscale">
+            @Html.DisplayFor(model => model.CodiceFiscale)
+        </dd>
+
+        <dt id="lblPartitaIva">
+            @Html.DisplayNameFor(model => model.PartitaIva)
+        </dt>
+
+        <dd  id="PartitaIva">
+            @Html.DisplayFor(model => model.PartitaIva)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var tipoCliente = $("#TipoCliente").val();
+            if (tipoCliente == "Privato") {
+                $("#lblCodiceFiscale").show();
+                $("#CodiceFiscale").show();
+                $("#lblPartitaIva").hide();
+                $("#PartitaIva").hide();
+            }
+            else {
+                $("#lblCodiceFiscale").hide();
+                $("#CodiceFiscale").hide();
+                $("#lblPartitaIva").show();
+                $("#PartitaIva").show();
+            }
+        });
+
+        $("#TipoCliente").change(function () {
+            var tipoCliente = $("#TipoCliente").val();
+            if (tipoCliente == "Privato") {
+                $("#lblCodiceFiscale").show();
+                $("#CodiceFiscale").show();
+                $("#lblPartitaIva").hide();
+                $("#PartitaIva").hide();
+            }
+            else {
+                $("#lblCodiceFiscale").hide();
+                $("#CodiceFiscale").hide();
+                $("#lblPartitaIva").show();
+                $("#PartitaIva").show();
+            }
+        });
+    </script>
+}

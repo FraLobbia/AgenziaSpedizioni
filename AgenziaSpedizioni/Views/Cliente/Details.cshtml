@@ -1,0 +1,72 @@
+﻿@model AgenziaSpedizioni.Models.Cliente
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h1>Dettagli del cliente</h1>
+
+@Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
+
+<div>
+    <h4>Cliente</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nome)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nome)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TipoCliente)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TipoCliente)
+        </dd>
+
+        <dt id="lblCodiceFiscale">
+            @Html.DisplayNameFor(model => model.CodiceFiscale)
+
+        <dd id="CodiceFiscale">
+            @Html.DisplayFor(model => model.CodiceFiscale)
+        </dd>
+
+        <dt id="lblPartitaIva">
+            @Html.DisplayNameFor(model => model.PartitaIva)
+        </dt>
+
+        <dd id="PartitaIva">
+            @Html.DisplayFor(model => model.PartitaIva)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
+</p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+    $(document).ready(function () {
+        var tipoCliente = $("#TipoCliente").val();
+        if (tipoCliente == "Privato") {
+            $("#lblCodiceFiscale").show();
+            $("#CodiceFiscale").show();
+            $("#lblPartitaIva").hide();
+            $("#PartitaIva").hide();
+        } else if (tipoCliente == "Azienda") {
+            $("#lblCodiceFiscale").hide();
+            $("#CodiceFiscale").hide();
+            $("#lblPartitaIva").show();
+            $("#PartitaIva").show();
+        }
+    });
+</script>
+
+}
