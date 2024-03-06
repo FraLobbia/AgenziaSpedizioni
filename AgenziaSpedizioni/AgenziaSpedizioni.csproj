@@ -131,6 +131,7 @@
     <Compile Include="Models\Aggiornamenti.cs" />
     <Compile Include="Models\Cliente.cs" />
     <Compile Include="Models\Spedizione.cs" />
+    <Compile Include="Models\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -629,8 +630,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Cliente\Create.cshtml" />
     <Content Include="Style\_bootstrapOverrides.scss" />
@@ -640,8 +639,11 @@
     <Content Include="Views\Cliente\Delete.cshtml" />
     <Content Include="Views\Cliente\Details.cshtml" />
     <Content Include="Views\Spedizione\Index.cshtml" />
-    <Content Include="Views\Spedizione\Details.cshtml" />
     <Content Include="Views\Spedizione\Create.cshtml" />
+    <Content Include="Views\Spedizione\Edit.cshtml" />
+    <Content Include="Views\Spedizione\Delete.cshtml" />
+    <Content Include="Views\Home\CheckStatus.cshtml" />
+    <Content Include="Views\Spedizione\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

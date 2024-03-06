@@ -10,7 +10,7 @@ namespace AgenziaSpedizioni.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Il campo Nome Cliente è obbligatorio.")]
-        [Display(Name = "Nome Cliente")]
+        [Display(Name = "ID Cliente")]
         public int ClienteId { get; set; } // Da impostare come dropdown
 
         [Required(ErrorMessage = "Il campo NumeroIdentificativo è obbligatorio.")]
@@ -51,5 +51,7 @@ namespace AgenziaSpedizioni.Models
         [DataType(DataType.DateTime)]
         public DateTime DataConsegnaPrevista { get; set; }
 
+        [ScaffoldColumn(false)]
+        public string Messaggio { get; set; }
     }
 }

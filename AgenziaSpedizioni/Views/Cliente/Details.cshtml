@@ -6,42 +6,55 @@
 
 <h1>Dettagli del cliente</h1>
 
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+
 @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
 <div>
     <h4>Cliente</h4>
     <hr />
-        <div class="form-group">
-            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TipoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10" id="TipoCliente">
-                @Html.DisplayFor(model => model.TipoCliente)
-                @Html.ValidationMessageFor(model => model.TipoCliente, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.TipoCliente, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10" id="TipoCliente">
+            @Html.DisplayFor(model => model.TipoCliente)
+            @Html.ValidationMessageFor(model => model.TipoCliente, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group" id="CodiceFiscale">
-            @Html.LabelFor(model => model.CodiceFiscale, htmlAttributes: new { @class = "control-label col-md-2"})
-            <div class="col-md-10">
-                @Html.DisplayFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CodiceFiscale, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group" id="CodiceFiscale">
+        @Html.LabelFor(model => model.CodiceFiscale, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CodiceFiscale, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group" id="PartitaIva">
-            @Html.LabelFor(model => model.PartitaIva, htmlAttributes: new { @class = "control-label col-md-2"})
-            <div class="col-md-10" >
-                @Html.DisplayFor(model => model.PartitaIva, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PartitaIva, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group" id="PartitaIva">
+        @Html.LabelFor(model => model.PartitaIva, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DisplayFor(model => model.PartitaIva, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PartitaIva, "", new { @class = "text-danger" })
         </div>
+    </div>
 
 </div>
 
@@ -51,21 +64,21 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-<script>
-    $(document).ready(function () {
-        var tipoCliente = $("#TipoCliente").text();
-        if (tipoCliente == "Privato") {
-            $("#lblCodiceFiscale").show();
-            $("#CodiceFiscale").show();
-            $("#lblPartitaIva").hide();
-            $("#PartitaIva").hide();
-        } else if (tipoCliente == "Azienda") {
-            $("#lblCodiceFiscale").hide();
-            $("#CodiceFiscale").hide();
-            $("#lblPartitaIva").show();
-            $("#PartitaIva").show();
-        }
-    });
-</script>
+    <script>
+        $(document).ready(function () {
+            var tipoCliente = $("#TipoCliente").text();
+            if (tipoCliente == "Privato") {
+                $("#lblCodiceFiscale").show();
+                $("#CodiceFiscale").show();
+                $("#lblPartitaIva").hide();
+                $("#PartitaIva").hide();
+            } else if (tipoCliente == "Azienda") {
+                $("#lblCodiceFiscale").hide();
+                $("#CodiceFiscale").hide();
+                $("#lblPartitaIva").show();
+                $("#PartitaIva").show();
+            }
+        });
+    </script>
 
 }

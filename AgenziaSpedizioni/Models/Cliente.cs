@@ -34,5 +34,7 @@ namespace AgenziaSpedizioni.Models
         //[Remote("IsPartitaIvaClienteAvailable", "Cliente", ErrorMessage = "La partita iva del cliente è già presente, inserirne un'altra.")]
         public string PartitaIva { get; set; }
 
+        [ScaffoldColumn(false)]
+        public string Messaggio { get; set; }
     }
 }

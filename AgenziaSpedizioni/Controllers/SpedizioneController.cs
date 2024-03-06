@@ -19,23 +19,25 @@ namespace AgenziaSpedizioni.Controllers
         public ActionResult Index()
         {
             // ottieni lista spedizioni
-            List<Spedizione> spedizioni = GetListaSpedizioni();
+            List<Spedizione> spedizioni = Utility.GetListaSpedizioni();
             return View(spedizioni);
         }
 
-        // GET: Spedizione/Details/5
-        public ActionResult Details(int id)
+        // GET: Spedizione/Status/5
+        public ActionResult Status(int id)
         {
-            // ottieni spedizione tramite id
-            Spedizione spedizione = GetSpedizioneById(id);
-            return View(spedizione);
+            Spedizione spedizione = Utility.GetSpedizioneById(id);
+            TempData["Spedizione"] = spedizione;
+
+            List<Aggiornamenti> aggiornamenti = Utility.GetListaAggiornamenti(id);
+            return View(aggiornamenti);
         }
 
         // GET: Spedizione/Create
         public ActionResult Create()
         {
             // ottieni lista clienti
-            List<Cliente> clienti = GetListaClienti();
+            List<Cliente> clienti = Utility.GetListaClienti();
             ViewBag.Clienti = clienti;
             return View();
         }
@@ -63,9 +65,9 @@ namespace AgenziaSpedizioni.Controllers
                         "Costo, " +
                         "DataConsegnaPrevista) " +
 
-                        "VALUES " +
+                        "VALUES (" +
 
-                        "(@ClienteId, " +
+                        "@ClienteId, " +
                         "@NumeroIdentificativo, " +
                         "@DataSpedizione, " +
                         "@Peso, " +
@@ -74,6 +76,8 @@ namespace AgenziaSpedizioni.Controllers
                         "@NominativoDestinatario, " +
                         "@Costo, " +
                         "@DataConsegnaPrevista)", conn);
+
+                    System.Diagnostics.Debug.WriteLine(Request);
 
                     // aggiungi parametri
                     cmd.Parameters.AddWithValue("@ClienteId", formSpedizione.ClienteId);
@@ -87,6 +91,9 @@ namespace AgenziaSpedizioni.Controllers
                     cmd.Parameters.AddWithValue("@NominativoDestinatario", formSpedizione.NominativoDestinatario);
                     cmd.Parameters.AddWithValue("@Costo", formSpedizione.Costo);
                     cmd.Parameters.AddWithValue("@DataConsegnaPrevista", formSpedizione.DataConsegnaPrevista);
+
+
+
                     // esegui comando
                     cmd.ExecuteNonQuery();
                     // imposta messaggio di successo
@@ -96,8 +103,8 @@ namespace AgenziaSpedizioni.Controllers
                 {
                     // imposta messaggio di errore
                     TempData["msgErrore"] = "Errore: " + ex.Message;
-                    ViewBag.Clienti = GetListaClienti();
-                    return View(formSpedizione);
+                    ViewBag.Clienti = Utility.GetListaClienti();
+                    return View();
                 }
             }
             // reindirizza alla lista spedizioni
@@ -107,6 +114,12 @@ namespace AgenziaSpedizioni.Controllers
         // GET: Spedizione/Edit/5
         public ActionResult Edit(int id)
         {
+            Spedizione spedizione = Utility.GetSpedizioneById(id);
+            if (spedizione.Messaggio != null)
+            {
+                TempData["msgErrore"] = spedizione.Messaggio;
+                return RedirectToAction("Index");
+            }
             return View();
         }
 
@@ -114,21 +127,63 @@ namespace AgenziaSpedizioni.Controllers
         [HttpPost]
         public ActionResult Edit(int id, FormCollection collection)
         {
-            try
+            using (SqlConnection conn = Connection.GetConn())
             {
-                // TODO: Add update logic here
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand(
+                        "UPDATE Spedizioni " +
+                        "SET " +
+                        "ClienteId = @ClienteId, " +
+                        "NumeroIdentificativo = @NumeroIdentificativo, " +
+                        "DataSpedizione = @DataSpedizione, " +
+                        "Peso = @Peso, " +
+                        "CittaDestinataria = @CittaDestinataria, " +
+                        "IndirizzoDestinatario = @IndirizzoDestinatario, " +
+                        "NominativoDestinatario = @NominativoDestinatario, " +
+                        "Costo = @Costo, " +
+                        "DataConsegnaPrevista = @DataConsegnaPrevista " +
+                        "WHERE Id = @Id", conn);
 
-                return RedirectToAction("Index");
+                    // aggiungi parametri
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    cmd.Parameters.AddWithValue("@ClienteId", collection["ClienteId"]);
+                    cmd.Parameters.AddWithValue("@NumeroIdentificativo", collection["NumeroIdentificativo"]);
+                    cmd.Parameters.AddWithValue("@DataSpedizione", collection["DataSpedizione"]);
+                    cmd.Parameters.AddWithValue("@Peso", collection["Peso"]);
+                    cmd.Parameters.AddWithValue("@CittaDestinataria", collection["CittaDestinataria"]);
+                    cmd.Parameters.AddWithValue("@IndirizzoDestinatario", collection["IndirizzoDestinatario"]);
+                    cmd.Parameters.AddWithValue("@NominativoDestinatario", collection["NominativoDestinatario"]);
+                    cmd.Parameters.AddWithValue("@Costo", collection["Costo"]);
+                    cmd.Parameters.AddWithValue("@DataConsegnaPrevista", collection["DataConsegnaPrevista"]);
+                    // esegui comando
+                    cmd.ExecuteNonQuery();
+                    // imposta messaggio di successo
+                    TempData["msgSuccess"] = "Spedizione modificata con successo!";
+                }
+                catch (Exception ex)
+                {
+                    // imposta messaggio di errore
+                    TempData["msgErrore"] = "Errore: " + ex.Message;
+                    return View(collection);
+                }
             }
-            catch
-            {
-                return View();
-            }
+            // reindirizza alla lista spedizioni
+            return RedirectToAction("Index");
+
         }
 
         // GET: Spedizione/Delete/5
         public ActionResult Delete(int id)
         {
+            Spedizione spedizione = Utility.GetSpedizioneById(id);
+            if (spedizione.Messaggio != null)
+            {
+                TempData["msgErrore"] = spedizione.Messaggio;
+                return RedirectToAction("Index");
+            }
             return View();
         }
 
@@ -136,16 +191,29 @@ namespace AgenziaSpedizioni.Controllers
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
         {
-            try
+            using (SqlConnection conn = Connection.GetConn())
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("DELETE FROM Spedizioni WHERE Id = @Id", conn);
+                    // aggiungi parametri
+                    cmd.Parameters.AddWithValue("@Id", id);
+                    // esegui comando
+                    cmd.ExecuteNonQuery();
+                    // imposta messaggio di successo
+                    TempData["msgSuccess"] = "Spedizione eliminata con successo!";
+                }
+                catch (Exception ex)
+                {
+                    // imposta messaggio di errore
+                    TempData["msgErrore"] = "Errore: " + ex.Message;
+                    return View(collection);
+                }
             }
-            catch
-            {
-                return View();
-            }
+            // reindirizza alla lista spedizioni
+            return RedirectToAction("Index");
         }
 
         //    __  __   ______   _______    ____    _____    _____ 
@@ -154,168 +222,6 @@ namespace AgenziaSpedizioni.Controllers
         //   | |\/| | |  __|      | |    | |  | | | |  | |   | |  
         //   | |  | | | |____     | |    | |__| | | |__| |  _| |_ 
         //   |_|  |_| |______|    |_|     \____/  |_____/  |_____|
-
-        // Meotodo per ottenere la lista delle spedizioni
-        // Non riceve parametri
-        // Restituisce una lista di oggetti Spedizione
-        public List<Spedizione> GetListaSpedizioni()
-        {
-            // crea lista di spedizioni
-            List<Spedizione> spedizioni = new List<Spedizione>();
-
-            using (SqlConnection conn = Connection.GetConn())
-            {
-                try
-                {
-                    conn.Open();
-                    // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Spedizioni", conn);
-                    // esegui comando
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    // leggi risultati
-                    while (reader.Read())
-                    {
-                        // crea oggetto spedizione
-                        Spedizione spedizione = new Spedizione();
-                        spedizione.Id = Convert.ToInt32(reader["Id"]);
-                        spedizione.ClienteId = Convert.ToInt32(reader["ClienteId"]);
-                        spedizione.NumeroIdentificativo = reader["NumeroIdentificativo"].ToString();
-                        spedizione.DataSpedizione = Convert.ToDateTime(reader["DataSpedizione"]);
-                        spedizione.Peso = Convert.ToDecimal(reader["Peso"]);
-                        spedizione.CittaDestinataria = reader["CittaDestinataria"].ToString();
-                        spedizione.IndirizzoDestinatario = reader["IndirizzoDestinatario"].ToString();
-                        spedizione.NominativoDestinatario = reader["NominativoDestinatario"].ToString();
-                        spedizione.Costo = Convert.ToDecimal(reader["Costo"]);
-                        spedizione.DataConsegnaPrevista = Convert.ToDateTime(reader["DataConsegnaPrevista"]);
-                        // aggiungi spedizione alla lista
-                        spedizioni.Add(spedizione);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["Message"] = "Errore: " + ex.Message;
-                }
-            }
-
-            return spedizioni;
-        }
-
-        // Metodo per ottenere una spedizione tramite id
-        // Riceve un intero id
-        // Restituisce un oggetto Spedizione
-        public Spedizione GetSpedizioneById(int id)
-        {
-            // crea oggetto spedizione
-            Spedizione spedizione = new Spedizione();
-
-            using (SqlConnection conn = Connection.GetConn())
-            {
-                try
-                {
-                    conn.Open();
-                    // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Spedizioni WHERE Id = @Id", conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    // esegui comando
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    // leggi risultati
-                    while (reader.Read())
-                    {
-                        spedizione.Id = Convert.ToInt32(reader["Id"]);
-                        spedizione.ClienteId = Convert.ToInt32(reader["ClienteId"]);
-                        spedizione.NumeroIdentificativo = reader["NumeroIdentificativo"].ToString();
-                        spedizione.DataSpedizione = Convert.ToDateTime(reader["DataSpedizione"]);
-                        spedizione.Peso = Convert.ToDecimal(reader["Peso"]);
-                        spedizione.CittaDestinataria = reader["CittaDestinataria"].ToString();
-                        spedizione.IndirizzoDestinatario = reader["IndirizzoDestinatario"].ToString();
-                        spedizione.NominativoDestinatario = reader["NominativoDestinatario"].ToString();
-                        spedizione.Costo = Convert.ToDecimal(reader["Costo"]);
-                        spedizione.DataConsegnaPrevista = Convert.ToDateTime(reader["DataConsegnaPrevista"]);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["Message"] = "Errore: " + ex.Message;
-                }
-            }
-
-            return spedizione;
-        }
-
-        // Metodo per ottenere la lista dei clienti dal db dalla tabella Cliente
-        // Non richiede parametri
-        // Restituisce una lista di oggetti di tipo Cliente
-        public List<Cliente> GetListaClienti()
-        {
-            // crea lista di clienti
-            List<Cliente> clienti = new List<Cliente>();
-
-            using (SqlConnection conn = Connection.GetConn())
-                try
-                {
-                    conn.Open();
-                    // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti", conn);
-                    // esegui comando
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    // leggi risultati
-                    while (reader.Read())
-                    {
-                        // crea oggetto cliente
-                        Cliente cliente = new Cliente();
-                        cliente.Id = Convert.ToInt32(reader["Id"]);
-                        cliente.Nome = reader["Nome"].ToString();
-                        cliente.TipoCliente = reader["TipoCliente"].ToString();
-                        cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
-                        cliente.PartitaIva = reader["PartitaIva"].ToString();
-                        // aggiungi cliente alla lista
-                        clienti.Add(cliente);
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["msgErrore"] = "Errore: " + ex.Message;
-                }
-
-
-            return clienti;
-        }
-
-        // Metodo per ottenere il cliente tramite id
-        // Richiede il parametro id in formato intero
-        // Restituisce un oggetto di tipo Cliente
-        public Cliente GetClienteById(int id)
-        {
-            Cliente cliente = new Cliente();
-            // ottieni connessione
-            using (SqlConnection conn = Connection.GetConn())
-                try
-                {
-                    conn.Open();
-                    // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti WHERE Id = @Id", conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    // esegui comando
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    // leggi risultati
-                    while (reader.Read())
-                    {
-                        // crea oggetto cliente
-                        cliente.Id = Convert.ToInt32(reader["Id"]);
-                        cliente.Nome = reader["Nome"].ToString();
-                        cliente.TipoCliente = reader["TipoCliente"].ToString();
-                        cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
-                        cliente.PartitaIva = reader["PartitaIva"].ToString();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["msgErrore"] = "Errore: " + ex.Message;
-                }
-
-            return cliente;
-        }
 
     }
 }

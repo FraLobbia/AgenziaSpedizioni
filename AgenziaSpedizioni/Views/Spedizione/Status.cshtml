@@ -1,0 +1,127 @@
+﻿@model IEnumerable<AgenziaSpedizioni.Models.Aggiornamenti>
+
+@{
+    ViewBag.Title = "Status";
+    // ottengo spedizione da tempdata
+    var spedizione = TempData["spedizione"] as AgenziaSpedizioni.Models.Spedizione;
+}
+
+<h1>Dettagli spedizione</h1>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ClienteId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumeroIdentificativo)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.DataSpedizione)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.Peso)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.CittaDestinataria)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.IndirizzoDestinatario)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.NominativoDestinatario)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.Costo)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.DataConsegnaPrevista)
+        </th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @spedizione.ClienteId
+            </td>
+            <td>
+                @spedizione.NumeroIdentificativo
+            </td>
+            <td>
+                @spedizione.DataSpedizione
+            </td>
+            <td>
+                @spedizione.Peso
+            </td>
+            <td>
+                @spedizione.CittaDestinataria
+            </td>
+            <td>
+                @spedizione.IndirizzoDestinatario
+            </td>
+            <td>
+                @spedizione.NominativoDestinatario
+            </td>
+            <td>
+                @spedizione.Costo
+            </td>
+            <td>
+                @spedizione.DataConsegnaPrevista
+            </td>
+        </tr>
+    }
+
+</table>
+
+<h2>Aggiornamenti spedizione</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Stato)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LuogoPacco)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataOraAggiornamento)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stato)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LuogoPacco)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataOraAggiornamento)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

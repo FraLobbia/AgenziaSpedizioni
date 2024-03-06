@@ -1,16 +1,37 @@
 ﻿@model AgenziaSpedizioni.Models.Spedizione
 
 @{
-    ViewBag.Title = "Dettagli spedizione";
+    ViewBag.Title = "Delete";
 }
 
-<h1>Dettagli della spedizione </h1>
-
+<h1>Delete</h1>
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
 @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
+<h3>Sei sicuro di voler cancellare la spedizione?</h3>
 <div>
+
     <hr />
     <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ClienteId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClienteId)
+        </dd>
+
         <dt>
             @Html.DisplayNameFor(model => model.NumeroIdentificativo)
         </dt>
@@ -76,7 +97,13 @@
         </dd>
 
     </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions ">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+
+        </div>
+    }
 </div>
-
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning" })
-

@@ -19,7 +19,12 @@ namespace AgenziaSpedizioni.Controllers
         public ActionResult Index()
         {
             // ottengo la lista dei clienti
-            List<Cliente> clienti = GetListaClienti();
+            List<Cliente> clienti = Utility.GetListaClienti();
+            // se c'è una property Messaggio, vuol dire che c'è stato un errore
+            if (clienti.Count > 0 && clienti[0].Messaggio != null)
+            {
+                ViewBag.msgErrore = clienti[0].Messaggio;
+            }
             ViewBag.msgSuccess = TempData["msgSuccess"];
             return View(clienti);
         }
@@ -27,7 +32,11 @@ namespace AgenziaSpedizioni.Controllers
         // GET: Cliente/Details/5
         public ActionResult Details(int id)
         {
-            Cliente cliente = GetClienteById(id);
+            Cliente cliente = Utility.GetClienteById(id);
+            if (cliente.Messaggio != null)
+            {
+                ViewBag.msgErrore = cliente.Messaggio;
+            }
             return View(cliente);
         }
 
@@ -105,7 +114,11 @@ namespace AgenziaSpedizioni.Controllers
         // GET: Cliente/Edit/5
         public ActionResult Edit(int id)
         {
-            Cliente cliente = GetClienteById(id);
+            Cliente cliente = Utility.GetClienteById(id);
+            if (cliente.Messaggio != null)
+            {
+                ViewBag.msgErrore = cliente.Messaggio;
+            }
             return View(cliente);
         }
 
@@ -153,7 +166,11 @@ namespace AgenziaSpedizioni.Controllers
         // GET: Cliente/Delete/5
         public ActionResult Delete(int id)
         {
-            Cliente cliente = GetClienteById(id);
+            Cliente cliente = Utility.GetClienteById(id);
+            if (cliente.Messaggio != null)
+            {
+                ViewBag.msgErrore = cliente.Messaggio;
+            }
             return View(cliente);
         }
 
@@ -281,79 +298,6 @@ namespace AgenziaSpedizioni.Controllers
             }
         }
 
-        // Metodo per ottenere la lista dei clienti dal db dalla tabella Cliente
-        // Non richiede parametri
-        // Restituisce una lista di oggetti di tipo Cliente
-        public List<Cliente> GetListaClienti()
-        {
-            // crea lista di clienti
-            List<Cliente> clienti = new List<Cliente>();
 
-            using (SqlConnection conn = Connection.GetConn())
-                try
-                {
-                    conn.Open();
-                    // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti", conn);
-                    // esegui comando
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    // leggi risultati
-                    while (reader.Read())
-                    {
-                        // crea oggetto cliente
-                        Cliente cliente = new Cliente();
-                        cliente.Id = Convert.ToInt32(reader["Id"]);
-                        cliente.Nome = reader["Nome"].ToString();
-                        cliente.TipoCliente = reader["TipoCliente"].ToString();
-                        cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
-                        cliente.PartitaIva = reader["PartitaIva"].ToString();
-                        // aggiungi cliente alla lista
-                        clienti.Add(cliente);
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["msgErrore"] = "Errore: " + ex.Message;
-                }
-
-
-            return clienti;
-        }
-
-        // Metodo per ottenere il cliente tramite id
-        // Richiede il parametro id in formato intero
-        // Restituisce un oggetto di tipo Cliente
-        public Cliente GetClienteById(int id)
-        {
-            Cliente cliente = new Cliente();
-            // ottieni connessione
-            using (SqlConnection conn = Connection.GetConn())
-                try
-                {
-                    conn.Open();
-                    // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Clienti WHERE Id = @Id", conn);
-                    cmd.Parameters.AddWithValue("@Id", id);
-                    // esegui comando
-                    SqlDataReader reader = cmd.ExecuteReader();
-                    // leggi risultati
-                    while (reader.Read())
-                    {
-                        // crea oggetto cliente
-                        cliente.Id = Convert.ToInt32(reader["Id"]);
-                        cliente.Nome = reader["Nome"].ToString();
-                        cliente.TipoCliente = reader["TipoCliente"].ToString();
-                        cliente.CodiceFiscale = reader["CodiceFiscale"].ToString();
-                        cliente.PartitaIva = reader["PartitaIva"].ToString();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    TempData["msgErrore"] = "Errore: " + ex.Message;
-                }
-
-            return cliente;
-        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data.SqlClient;
+﻿using AgenziaSpedizioni.Models;
 using System.Web.Mvc;
 namespace AgenziaSpedizioni.Controllers
 {
@@ -10,38 +9,27 @@ namespace AgenziaSpedizioni.Controllers
             return View();
         }
 
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-
-            return View();
-        }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }
 
         public ActionResult CheckStatus()
         {
-            // ottieni connessione
-            // SqlConnection conn = Connection.GetConn();
-            using (SqlConnection conn = Connection.GetConn())
-            {
-                conn.Open();
-                // crea comando
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Spedizione", conn);
-                // esegui comando
-                SqlDataReader reader = cmd.ExecuteReader();
-                // leggi risultati
-                while (reader.Read())
-                {
-                    Console.WriteLine(reader["Id"]);
-                }
-            }
+            // mostra solo un imput in cui inserire il numero identificativo
             return View();
         }
+
+        [HttpPost]
+        public ActionResult CheckStatus(string NumeroIdentificativo)
+        {
+            // ottieni l'id della spedizione tramite il numero identificativo
+            int id = Utility.GetIdSpedizioneByNumeroIdentificativo(NumeroIdentificativo);
+            // se l'id è -1, la spedizione non esiste
+            if (id == -1)
+            {
+                ViewBag.msgErrore = "La spedizione con il numero identificativo " + NumeroIdentificativo + " non esiste.";
+                return View();
+            }
+            // se invece esiste, reindirizza alla pagina Status del controller Spedizione
+            return RedirectToAction("Status", "Spedizione", new { id = id });
+        }
+
     }
 }

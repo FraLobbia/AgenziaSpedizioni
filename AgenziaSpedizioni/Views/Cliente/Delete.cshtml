@@ -5,6 +5,19 @@
 }
 
 <h1>Delete</h1>
+
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
 @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
 <h3>Sicuro di voler cancellare questo cliente?</h3>
