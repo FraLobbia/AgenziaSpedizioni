@@ -32,7 +32,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserisci il tuo nome" } })
                 @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -53,7 +53,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CodiceFiscale, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblCodiceFiscale" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.CodiceFiscale, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserisci il tuo codice fiscale" } })
                 @Html.ValidationMessageFor(model => model.CodiceFiscale, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -61,7 +61,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PartitaIva, htmlAttributes: new { @class = "control-label col-md-2", @id = "lblPartitaIva" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PartitaIva, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PartitaIva, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserisci la partita IVA della tua azienda" } })
                 @Html.ValidationMessageFor(model => model.PartitaIva, "", new { @class = "text-danger" })
             </div>
         </div>

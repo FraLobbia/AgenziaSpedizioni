@@ -264,7 +264,13 @@ namespace AgenziaSpedizioni.Models
                 {
                     conn.Open();
                     // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM AggiornamentiSpedizione WHERE SpedizioneId = @IdSpedizione", conn);
+                    SqlCommand cmd = new SqlCommand(
+                        "SELECT * FROM AggiornamentiSpedizione " +
+                        "WHERE " +
+                        "SpedizioneId = @IdSpedizione " +
+                        "order by " +
+                        "DataAggiornamento " +
+                        "desc", conn);
                     cmd.Parameters.AddWithValue("@IdSpedizione", idSpedizione);
                     // esegui comando
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -277,7 +283,8 @@ namespace AgenziaSpedizioni.Models
                         aggiornamento.Stato = reader["Stato"].ToString();
                         aggiornamento.LuogoPacco = reader["LuogoPacco"].ToString();
                         aggiornamento.Descrizione = reader["Descrizione"].ToString();
-                        aggiornamento.DataOraAggiornamento = Convert.ToDateTime(reader["DataOraAggiornamento"]);
+                        aggiornamento.DataOraAggiornamento = Convert.ToDateTime(reader["DataAggiornamento"]);
+                        aggiornamento.Id = Convert.ToInt32(reader["SpedizioneId"]);
 
                         // aggiungi aggiornamento alla lista
                         aggiornamenti.Add(aggiornamento);
@@ -294,5 +301,39 @@ namespace AgenziaSpedizioni.Models
             return aggiornamenti;
         }
 
+
+        // Metodo per controllare se esiste una spedizione con un determinato NumeroIdentificativo e partitaIVA o codiceFiscale
+        // Riceve due stringhe NumeroIdentificativo e CodFiscPartIVA
+        // Restituisce un intero id
+        public static int CheckSpedizione(string NumeroIdentificativo, string CodFiscPartIVA)
+        {
+            int id = 0;
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand(@"SELECT S.Id
+                                                FROM Spedizioni AS S
+                                                INNER JOIN Clienti AS C ON S.ClienteId = C.Id
+                                                WHERE S.NumeroIdentificativo = @NumeroIdentificativo
+                                                AND (C.PartitaIva = @CodFiscPartIVA OR C.CodiceFiscale = @CodFiscPartIVA)", conn);
+                    cmd.Parameters.AddWithValue("@NumeroIdentificativo", NumeroIdentificativo);
+                    cmd.Parameters.AddWithValue("@CodFiscPartIVA", CodFiscPartIVA);
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        id = Convert.ToInt32(reader["Id"]);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    id = -1; // -1 indica errore
+                }
+            }
+
+            return id;
+        }
     }
 }

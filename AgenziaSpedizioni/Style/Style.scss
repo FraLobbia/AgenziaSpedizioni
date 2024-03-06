@@ -53,7 +53,7 @@ h1 {
     background-image: linear-gradient(to right, green 33.3%, white 33.3%, white 66.6%, red 66.6%);
 }*/
 
-td:last-of-type {
+td:last-of-type > div {
 
     @extend .d-flex;
     @extend .justify-content-center;

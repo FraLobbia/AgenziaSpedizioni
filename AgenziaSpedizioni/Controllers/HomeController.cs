@@ -17,17 +17,29 @@ namespace AgenziaSpedizioni.Controllers
         }
 
         [HttpPost]
-        public ActionResult CheckStatus(string NumeroIdentificativo)
+        public ActionResult CheckStatus(FormCollection collection)
         {
-            // ottieni l'id della spedizione tramite il numero identificativo
-            int id = Utility.GetIdSpedizioneByNumeroIdentificativo(NumeroIdentificativo);
-            // se l'id è -1, la spedizione non esiste
-            if (id == -1)
+            // ottengo il numero identificativo e il codice fiscale/partita iva dal form
+            string NumeroIdentificativo = collection["NumeroIdentificativo"];
+            string codFiscPartIVA = collection["CodFiscPartIVA"];
+
+
+            // controllo se esiste una spedizione con quel numero identificativo e quel codice fiscale/partita iva
+            int id = Utility.CheckSpedizione(NumeroIdentificativo, codFiscPartIVA);
+
+            System.Diagnostics.Debug.WriteLine(id);
+            // gestisci i casi in cui la spedizione non esiste o il numero identificativo non è valido o non esiste
+            switch (id)
             {
-                ViewBag.msgErrore = "La spedizione con il numero identificativo " + NumeroIdentificativo + " non esiste.";
-                return View();
+
+                case 0:
+                    TempData["msgErrore"] = "I valori inseriti non sono validi";
+                    return View();
+                case -1:
+                    TempData["msgErrore"] = "Si è verificato un errore";
+                    return View();
             }
-            // se invece esiste, reindirizza alla pagina Status del controller Spedizione
+
             return RedirectToAction("Status", "Spedizione", new { id = id });
         }
 

@@ -25,61 +25,14 @@
 @Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
 <div class="form-horizontal">
     <hr />
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-   
-
-
-
-    @*<div class="form-group">
-
-        @Html.HiddenFor(model => model.NumeroIdentificativo, new { @Value = spedizione.NumeroIdentificativo })
-
-    </div>
-
-    <div class="form-group">
-
-        @Html.HiddenFor(model => model.DataSpedizione, new { @Value = spedizione.DataSpedizione })
-
-    </div>
-
-    <div class="form-group">
-
-        @Html.HiddenFor(model => model.Peso, new { @Value = spedizione.Peso })
-
-    </div>
-
-    <div class="form-group">
-
-        @Html.HiddenFor(model => model.CittaDestinataria, new { @Value = spedizione.CittaDestinataria })
-
-    </div>
-
-    <div class="form-group">
-
-        @Html.HiddenFor(model => model.IndirizzoDestinatario, new { @Value = spedizione.IndirizzoDestinatario })
-
-    </div>
-
-    <div class="form-group">
-
-        @Html.HiddenFor(model => model.NominativoDestinatario, new { @Value = spedizione.NominativoDestinatario })
-
-    </div>
-
-    <div class="form-group">
-        @Html.HiddenFor(model => model.Costo, new { @Value = spedizione.Costo })
-    </div>
-
-    <div class="form-group">
-        @Html.HiddenFor(model => model.DataConsegnaPrevista, new { @Value = spedizione.DataConsegnaPrevista })
-    </div>*@
-
+  
     <div class="form-group">
         @Html.LabelFor(model => model.Stato, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
@@ -93,7 +46,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.LuogoPacco, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.LuogoPacco, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.EditorFor(model => model.LuogoPacco, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserisci dove si trova il pacco" } })
             @Html.ValidationMessageFor(model => model.LuogoPacco, "", new { @class = "text-danger" })
         </div>
     </div>
@@ -101,7 +54,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Descrizione, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.TextAreaFor(model => model.Descrizione, new { @class = "form-control" })
+            @Html.TextAreaFor(model => model.Descrizione, new { @class = "form-control", placeholder = "Inserisci una descrizione" })
             @Html.ValidationMessageFor(model => model.Descrizione, "", new { @class = "text-danger" })
         </div>
     </div>

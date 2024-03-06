@@ -2,6 +2,8 @@
 
 @{
     ViewBag.Title = "CheckStatus";
+    ViewBag.msgErrore = TempData["msgErrore"];
+    
 }
 
 <h2>Inserisci numero identificativo</h2>
@@ -22,22 +24,32 @@
 {
     @Html.AntiForgeryToken()
     
-    <div class="form-horizontal">
+<div class="form-horizontal">
 
-       
-      <div class="form-group">
-            @Html.LabelFor(model => model.NumeroIdentificativo, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-12">
-                @Html.EditorFor(model => model.NumeroIdentificativo, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NumeroIdentificativo, "", new { @class = "text-danger" })
-            </div>
-      </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-12 text-center">
-                <input type="submit" value="Cerca spedizione" class="btn btn-primary" />
-            </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.NumeroIdentificativo, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-12">
+            @Html.EditorFor(model => model.NumeroIdentificativo, new { htmlAttributes = new { @class = "form-control", placeholder = "Inserisci il numero identificativo" } })
+            @Html.ValidationMessageFor(model => model.NumeroIdentificativo, "", new { @class = "text-danger" })
         </div>
     </div>
+
+    <div class="form-group">
+        <label for="codFiscPartIVA" class="control-label col-md-2">Codisce fiscale o Partita IVA</label>
+        <div class="col-md-12">
+            <input type="text" class="form-control" name="codFiscPartIVA" id="codFiscPartIVA" placeholder="Inserisci la tua partita IVA o il tuo Codice fiscale" />
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-12 text-center">
+            <input type="submit" value="Cerca spedizione" class="btn btn-primary" />
+        </div>
+    </div>
+</div>
 }
 
 

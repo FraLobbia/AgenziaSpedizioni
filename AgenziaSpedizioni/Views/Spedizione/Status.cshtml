@@ -6,6 +6,7 @@
     var spedizione = TempData["spedizione"] as AgenziaSpedizioni.Models.Spedizione;
     ViewBag.msgErrore = TempData["msgErrore"];
     ViewBag.msgSuccess = TempData["msgSuccess"];
+    string nomeCliente = AgenziaSpedizioni.Models.Utility.GetClienteById(spedizione.ClienteId).Nome;
 }
 
 <h1>Dettagli spedizione</h1>
@@ -28,7 +29,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ClienteId)
+            Nome Cliente
         </th>
         <th>
             @Html.DisplayNameFor(model => model.NumeroIdentificativo)
@@ -64,42 +65,43 @@
 
     </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @spedizione.ClienteId
-            </td>
-            <td>
-                @spedizione.NumeroIdentificativo
-            </td>
-            <td>
-                @spedizione.DataSpedizione
-            </td>
-            <td>
-                @spedizione.Peso
-            </td>
-            <td>
-                @spedizione.CittaDestinataria
-            </td>
-            <td>
-                @spedizione.IndirizzoDestinatario
-            </td>
-            <td>
-                @spedizione.NominativoDestinatario
-            </td>
-            <td>
-                @spedizione.Costo
-            </td>
-            <td>
-                @spedizione.DataConsegnaPrevista
-            </td>
-        </tr>
-    }
+
+    <tr>
+        <td>
+            @nomeCliente
+        </td>
+        <td>
+            @spedizione.NumeroIdentificativo
+        </td>
+        <td>
+            @spedizione.DataSpedizione
+        </td>
+        <td>
+            @spedizione.Peso
+        </td>
+        <td>
+            @spedizione.CittaDestinataria
+        </td>
+        <td>
+            @spedizione.IndirizzoDestinatario
+        </td>
+        <td>
+            @spedizione.NominativoDestinatario
+        </td>
+        <td>
+            @spedizione.Costo
+        </td>
+        <td>
+            @spedizione.DataConsegnaPrevista
+        </td>
+    </tr>
 
 </table>
+<div class="d-flex gap-2 align-items-center my-2">
 
 <h2>Aggiornamenti spedizione</h2>
+@Html.ActionLink("Aggiorna stato", "Create", "Aggiornamenti", new { id = @spedizione.Id }, new { @class = "btn btn-success m-0" })
+</div>
 
 <table class="table">
     <tr>
@@ -115,7 +117,6 @@
         <th>
             @Html.DisplayNameFor(model => model.DataOraAggiornamento)
         </th>
-        <th></th>
     </tr>
 
     @foreach (var item in Model)
@@ -133,11 +134,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DataOraAggiornamento)
             </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
+
         </tr>
     }
 

@@ -4,12 +4,18 @@
 
 <main>
     <section class="row justify-content-center" aria-labelledby="aspnetTitle">
-        <h1 id="title" >Azienda Spedizioni S.P.A</h1>
+        <h1 id="title">Azienda Spedizioni S.P.A</h1>
         <p class="lead">Se state cercando un partner affidabile per gestire le vostre spedizioni in modo efficiente e sicuro, siete nel posto giusto. Azienda Spedizioni S.P.A è qui per offrirvi servizi di spedizione su misura, con un'attenzione particolare alla qualità, alla puntualità e alla soddisfazione del cliente.</p>
         @Html.ActionLink("Aggiungi cliente", "Create", "Cliente", null, new { @class = "btn btn-primary w-25" })
-   
+        @Html.ActionLink("Aggiungi spedizione", "Create", "Spedizione", null, new { @class = "btn btn-success w-25 mx-4" })
+        @Html.ActionLink("Ricerca spedizione", "CheckStatus", "Home", null, new { @class = "btn btn-primary w-25" })
 
-   <img class="mx-auto" src="https://www.supplychainitaly.it/wp-content/uploads/2021/01/Poste-Italiane-Sda-vaccino-Moderna.jpg" alt="Immagine corriere" />
+
+
+
+
+
+        <img class="mx-auto" src="https://www.supplychainitaly.it/wp-content/uploads/2021/01/Poste-Italiane-Sda-vaccino-Moderna.jpg" alt="Immagine corriere" />
     </section>
    
 

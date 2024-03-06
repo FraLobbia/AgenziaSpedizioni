@@ -105,7 +105,7 @@ namespace AgenziaSpedizioni.Controllers
                     conn.Close();
                 }
 
-                TempData["msgSuccess"] = "Cliente" + formCliente.Nome + " inserito correttamente";
+                TempData["msgSuccess"] = "Cliente " + formCliente.Nome + " inserito correttamente";
                 return RedirectToAction("Index");
             }
 
