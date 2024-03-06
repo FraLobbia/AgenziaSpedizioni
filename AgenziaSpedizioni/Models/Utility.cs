@@ -264,7 +264,7 @@ namespace AgenziaSpedizioni.Models
                 {
                     conn.Open();
                     // crea comando
-                    SqlCommand cmd = new SqlCommand("SELECT * FROM Aggiornamenti WHERE IdSpedizione = @IdSpedizione", conn);
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM AggiornamentiSpedizione WHERE SpedizioneId = @IdSpedizione", conn);
                     cmd.Parameters.AddWithValue("@IdSpedizione", idSpedizione);
                     // esegui comando
                     SqlDataReader reader = cmd.ExecuteReader();
@@ -273,7 +273,6 @@ namespace AgenziaSpedizioni.Models
                     {
                         // crea oggetto aggiornamento
                         Aggiornamenti aggiornamento = new Aggiornamenti();
-                        aggiornamento.Id = Convert.ToInt32(reader["Id"]);
                         aggiornamento.IdAggiornamento = Convert.ToInt32(reader["IdAggiornamento"]);
                         aggiornamento.Stato = reader["Stato"].ToString();
                         aggiornamento.LuogoPacco = reader["LuogoPacco"].ToString();

@@ -644,11 +644,11 @@
     <Content Include="Views\Spedizione\Delete.cshtml" />
     <Content Include="Views\Home\CheckStatus.cshtml" />
     <Content Include="Views\Spedizione\Status.cshtml" />
+    <Content Include="Views\Aggiornamenti\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="CustomValidation\" />
-    <Folder Include="Views\Aggiornamenti\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

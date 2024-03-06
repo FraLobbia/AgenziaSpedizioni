@@ -4,9 +4,26 @@
     ViewBag.Title = "Status";
     // ottengo spedizione da tempdata
     var spedizione = TempData["spedizione"] as AgenziaSpedizioni.Models.Spedizione;
+    ViewBag.msgErrore = TempData["msgErrore"];
+    ViewBag.msgSuccess = TempData["msgSuccess"];
 }
 
 <h1>Dettagli spedizione</h1>
+
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+
+@Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
 <table class="table">
     <tr>

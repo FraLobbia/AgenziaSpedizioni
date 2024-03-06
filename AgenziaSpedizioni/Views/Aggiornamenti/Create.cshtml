@@ -1,0 +1,123 @@
+﻿@model AgenziaSpedizioni.Models.Aggiornamenti
+
+@{
+    ViewBag.Title = "Create";
+    var spedizione = TempData["spedizione"] as AgenziaSpedizioni.Models.Spedizione;
+    var statiPossibile = new List<string> { "in transito", "in consegna", "consegnato", "non consegnato" };
+    
+}
+
+<h1>Aggiungi un aggiornamento alla spedizione</h1>
+
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+
+@Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+   
+
+
+
+    @*<div class="form-group">
+
+        @Html.HiddenFor(model => model.NumeroIdentificativo, new { @Value = spedizione.NumeroIdentificativo })
+
+    </div>
+
+    <div class="form-group">
+
+        @Html.HiddenFor(model => model.DataSpedizione, new { @Value = spedizione.DataSpedizione })
+
+    </div>
+
+    <div class="form-group">
+
+        @Html.HiddenFor(model => model.Peso, new { @Value = spedizione.Peso })
+
+    </div>
+
+    <div class="form-group">
+
+        @Html.HiddenFor(model => model.CittaDestinataria, new { @Value = spedizione.CittaDestinataria })
+
+    </div>
+
+    <div class="form-group">
+
+        @Html.HiddenFor(model => model.IndirizzoDestinatario, new { @Value = spedizione.IndirizzoDestinatario })
+
+    </div>
+
+    <div class="form-group">
+
+        @Html.HiddenFor(model => model.NominativoDestinatario, new { @Value = spedizione.NominativoDestinatario })
+
+    </div>
+
+    <div class="form-group">
+        @Html.HiddenFor(model => model.Costo, new { @Value = spedizione.Costo })
+    </div>
+
+    <div class="form-group">
+        @Html.HiddenFor(model => model.DataConsegnaPrevista, new { @Value = spedizione.DataConsegnaPrevista })
+    </div>*@
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Stato, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+
+            @Html.DropDownListFor(model => model.Stato, new SelectList(statiPossibile), "Scegli nuovo stato", new { @class = "form-control" })
+
+            @Html.ValidationMessageFor(model => model.Stato, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LuogoPacco, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LuogoPacco, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.LuogoPacco, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Descrizione, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.TextAreaFor(model => model.Descrizione, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Descrizione, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.HiddenFor(model => model.DataOraAggiornamento, new { @Value = DateTime.Now })
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-success" />
+        </div>
+    </div>
+</div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

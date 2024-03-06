@@ -85,6 +85,7 @@
                 @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-warning m-0" })
                 @Html.ActionLink("Details", "Status", new { id = item.Id }, new { @class = "btn btn-secondary m-0" })
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-danger m-0" })
+                @Html.ActionLink("Aggiorna stato", "Create","Aggiornamenti", new { id = item.Id }, new { @class = "btn btn-success m-0" })
             </td>
         </tr>
     }
