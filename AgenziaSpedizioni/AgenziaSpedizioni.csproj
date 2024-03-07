@@ -124,13 +124,16 @@
     <Compile Include="Controllers\AggiornamentiController.cs" />
     <Compile Include="Controllers\ClienteController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\SpedizioneController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Aggiornamenti.cs" />
     <Compile Include="Models\Cliente.cs" />
+    <Compile Include="Models\SiteRole.cs" />
     <Compile Include="Models\Spedizione.cs" />
+    <Compile Include="Models\Utente.cs" />
     <Compile Include="Models\Utility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -646,6 +649,8 @@
     <Content Include="Views\Spedizione\Status.cshtml" />
     <Content Include="Views\Aggiornamenti\Create.cshtml" />
     <Content Include="Views\Spedizione\InConsegnaOggi.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\Home\Status.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

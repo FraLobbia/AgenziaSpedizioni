@@ -4,9 +4,11 @@ using System.Data.SqlClient;
 using System.Web.Mvc;
 namespace AgenziaSpedizioni.Controllers
 {
+    [Authorize]
     public class AggiornamentiController : Controller
     {
         // GET: Aggiornamenti
+
         public ActionResult Index()
         {
             return RedirectToAction("Index", "Spedizione");
@@ -23,6 +25,7 @@ namespace AgenziaSpedizioni.Controllers
         }
 
         // POST: Aggiornamenti/Create
+
         [HttpPost]
         public ActionResult Create(int id, Aggiornamenti formAggiornamenti)
         {
@@ -90,6 +93,7 @@ namespace AgenziaSpedizioni.Controllers
         }
 
         // GET: Aggiornamenti/Delete/5
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             return View();
@@ -97,6 +101,7 @@ namespace AgenziaSpedizioni.Controllers
 
         // POST: Aggiornamenti/Delete/5
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try

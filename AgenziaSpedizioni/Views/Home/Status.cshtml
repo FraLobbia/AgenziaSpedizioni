@@ -1,0 +1,141 @@
+﻿@model IEnumerable<AgenziaSpedizioni.Models.Aggiornamenti>
+
+@{
+    ViewBag.Title = "Status";
+    // ottengo spedizione da tempdata
+    var spedizione = TempData["spedizione"] as AgenziaSpedizioni.Models.Spedizione;
+    ViewBag.msgErrore = TempData["msgErrore"];
+    ViewBag.msgSuccess = TempData["msgSuccess"];
+    string nomeCliente = AgenziaSpedizioni.Models.Utility.GetClienteById(spedizione.ClienteId).Nome;
+}
+
+<h1>Dettagli spedizione</h1>
+
+@if (ViewBag.msgErrore != null)
+{
+    <div class="alert alert-danger fw-bold text-danger my-3" role="alert">
+        @ViewBag.msgErrore
+    </div>
+}
+@if (ViewBag.msgSuccess != null)
+{
+    <div class="alert alert-success fw-bold text-success my-3" role="alert">
+        @ViewBag.msgSuccess
+    </div>
+}
+
+@Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
+
+<table class="table">
+    <tr>
+        <th>
+            Nome Cliente
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumeroIdentificativo)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.DataSpedizione)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.Peso)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.CittaDestinataria)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.IndirizzoDestinatario)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.NominativoDestinatario)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.Costo)
+        </th>
+        <th>
+
+            @Html.DisplayNameFor(model => model.DataConsegnaPrevista)
+        </th>
+
+    </tr>
+
+
+    <tr>
+        <td>
+            @nomeCliente
+        </td>
+        <td>
+            @spedizione.NumeroIdentificativo
+        </td>
+        <td>
+            @spedizione.DataSpedizione
+        </td>
+        <td>
+            @spedizione.Peso
+        </td>
+        <td>
+            @spedizione.CittaDestinataria
+        </td>
+        <td>
+            @spedizione.IndirizzoDestinatario
+        </td>
+        <td>
+            @spedizione.NominativoDestinatario
+        </td>
+        <td>
+            @spedizione.Costo
+        </td>
+        <td>
+            @spedizione.DataConsegnaPrevista
+        </td>
+    </tr>
+
+</table>
+<div class="d-flex gap-2 align-items-center my-2">
+
+    <h2>Aggiornamenti spedizione</h2>
+    @Html.ActionLink("Aggiorna stato", "Create", "Aggiornamenti", new { id = @spedizione.Id }, new { @class = "btn btn-success m-0" })
+</div>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Stato)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LuogoPacco)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Descrizione)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataOraAggiornamento)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stato)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LuogoPacco)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descrizione)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataOraAggiornamento)
+            </td>
+
+        </tr>
+    }
+
+</table>

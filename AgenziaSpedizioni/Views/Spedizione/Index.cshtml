@@ -4,6 +4,7 @@
     ViewBag.Title = "Elenco spedizioni";
     ViewBag.msgErrore = TempData["msgErrore"];
     ViewBag.msgSuccess = TempData["msgSuccess"];
+    List<string> cittaDestinatarie = AgenziaSpedizioni.Models.Utility.GetCittaDestinatarie();
 }
 
 <h1>Elenco delle spedizione</h1>
@@ -23,10 +24,34 @@
 }
 
 @Html.ActionLink("Crea nuova spedizione", "Create", null, new { @class = "btn btn-success" })
-@Html.ActionLink("Spedizioni in consegna oggi", "InConsegnaOggi", null, new { @class = "btn btn-primary mx-4" })
+@*@Html.ActionLink("Spedizioni in consegna oggi", "InConsegnaOggi", null, new { @class = "btn btn-primary mx-4" })*@
 
+<div class="d-flex justify-content-evenly align-items-center">
 
-<table class="table">
+    <button id="btnConsegnaOggi" onclick="GetInConsegnaOggi()" class="btn btn-primary">Spedizioni in consegna oggi</button>
+    
+            <div class="vr"></div>
+
+    <button id="btnTotaleConsegnaOggi" onclick="GetTotaleInConsegnaOggi()" class="btn btn-primary mx-4">Totale spedizioni in consegna oggi</button>
+   
+             <div class="vr"></div>
+
+    <select id="cittaDestinatarie" class="form-select" style="width:200px">
+        <option value="0">Seleziona una città</option>
+        @foreach (var citta in cittaDestinatarie)
+        {
+            <option value="@citta">@citta</option>
+        }
+    </select>
+
+    <button id="btnConsegnaPerCitta" onclick="GetInConsegnaPerCitta()" class="btn btn-primary">Spedizioni in consegna per città</button>
+
+</div>
+
+<div id="consegneOggi"></div>
+<div id="consegnePerCitta"></div>
+
+<table class="table mt-2">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.nomeCliente)
@@ -101,3 +126,112 @@
     }
 
 </table>
+
+@section scripts{
+    <script>
+        // =============== Fetch per le consegne di oggi in citta ===============
+        function GetInConsegnaPerCitta() {
+            var citta = document.getElementById("cittaDestinatarie").value;
+             fetch('https://localhost:44391/Spedizione/GetConsegnePerCitta/' + citta)
+                .then(response => response.json())
+                .then(data => {
+                    const consegnePerCitta = document.getElementById("consegnePerCitta");
+                    const consegneOggi = document.getElementById("consegneOggi");
+                    // nascondo le consegne di oggi e mostro le consegne per citta
+                    consegnePerCitta.hidden = false;
+                    consegneOggi.hidden = true;
+
+                    consegnePerCitta.innerHTML = "";
+
+                    for (let i = 0; i < data.length; i++) {
+                        // ottengo il timestamp
+                        let timestamp = data[i].DataConsegnaPrevista;
+                        // Estrarre i millisecondi dal timestamp e creare un oggetto Data
+                        let dataConsegna = convertiTimestampInData(timestamp);
+
+                        consegnePerCitta.innerHTML += `
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title
+                            ">Cliente: ${data[i].nomeCliente}</h5>
+                            <p class="card-text">Città: ${data[i].CittaDestinataria}</p>
+                            <p class="card-text">Indirizzo: ${data[i].IndirizzoDestinatario}</p>
+                            <p class="card-text">Destinatario: ${data[i].NominativoDestinatario}</p>
+                            <p class="card-text">Data Consegna Prevista: ${dataConsegna}</p>
+                        </div>
+                    </div>
+                `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Si è verificato un errore durante il recupero dei dati:', error);
+                });
+        }
+
+        // =============== Fetch per il totale delle consegne di oggi ===============
+        function GetTotaleInConsegnaOggi() {
+            fetch('https://localhost:44391/Spedizione/GetTotaleInConsegnaOggi')
+                .then(response => response.json())
+                .then(data => alert("Il totale delle consegne per oggi è " + data));
+
+        }
+
+        // =============== Fetch per le consegne di oggi ===============
+        function GetInConsegnaOggi() {
+            fetch('https://localhost:44391/Spedizione/GetInConsegnaOggi')
+                .then(response => response.json())
+                .then(data => {
+                    const consegneOggi = document.getElementById("consegneOggi");
+                    const consegnePerCitta = document.getElementById("consegnePerCitta");
+                    // nascondo le consegne per citta e mostro le consegne di oggi
+                    consegnePerCitta.hidden = true;
+                    consegneOggi.hidden = false;
+
+                    console.log(data[0].DataConsegnaPrevista);
+                    consegneOggi.innerHTML = "";
+
+                    for (let i = 0; i < data.length; i++) {
+                        // ottengo il timestamp
+                        let timestamp = data[i].DataConsegnaPrevista;
+                        // Estrarre i millisecondi dal timestamp e creare un oggetto Data
+                        let dataConsegna = convertiTimestampInData(timestamp);
+
+                        consegneOggi.innerHTML += `
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">Cliente: ${data[i].nomeCliente}</h5>
+                            <p class="card-text">Città: ${data[i].CittaDestinataria}</p>
+                            <p class="card-text">Indirizzo: ${data[i].IndirizzoDestinatario}</p>
+                            <p class="card-text">Destinatario: ${data[i].NominativoDestinatario}</p>
+                            <p class="card-text">Data Consegna Prevista: ${dataConsegna}</p>
+                        </div>
+                    </div>
+                `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Si è verificato un errore durante il recupero dei dati:', error);
+                });
+        }
+
+        function convertiTimestampInData(timestamp) {
+            // Estrarre i millisecondi dal timestamp
+            var millisecondi = parseInt(timestamp.replace("/Date(", "").replace(")/", ""));
+
+            // Creare un oggetto Data utilizzando i millisecondi
+            var data = new Date(millisecondi);
+
+            // Ottenere le informazioni sulla data
+            var giorno = ("0" + data.getDate()).slice(-2); // Aggiungi lo zero iniziale e prendi solo gli ultimi due caratteri
+            var mese = ("0" + (data.getMonth() + 1)).slice(-2); // Mese è zero-based, quindi aggiungi 1 e prendi solo gli ultimi due caratteri
+            var anno = data.getFullYear();
+
+            // Costruire la stringa nel formato leggibile
+            var dataLeggibile = giorno + "/" + mese + "/" + anno;
+
+            return dataLeggibile;
+        }
+
+    </script>
+}
+```

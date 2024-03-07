@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace AgenziaSpedizioni.Controllers
 {
+    [Authorize]
     public class SpedizioneController : Controller
     {
         //                _____   _______   _____    ____    _   _    _____ 
@@ -24,18 +25,14 @@ namespace AgenziaSpedizioni.Controllers
             return View(spedizioni);
         }
 
-        public ActionResult InConsegnaOggi()
-        {
-            // ottieni lista spedizioni in consegna oggi
-            List<Spedizione> spedizioni = Utility.GetSpedizioniInConsegnaOggi();
-            return View(spedizioni);
-        }
+        //public ActionResult InConsegnaOggi()
+        //{
+        //    // ottieni lista spedizioni in consegna oggi
+        //    List<Spedizione> spedizioni = Utility.GetSpedizioniInConsegnaOggi();
+        //    return View(spedizioni);
+        //}
 
-        public ActionResult InConsegnaPerCitta()
-        {
-            // todo: implementare
-            return View();
-        }
+
 
         // GET: Spedizione/Status/5
         public ActionResult Status(int id)
@@ -221,6 +218,7 @@ namespace AgenziaSpedizioni.Controllers
         }
 
         // GET: Spedizione/Delete/5
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             Spedizione spedizione = Utility.GetSpedizioneById(id);
@@ -233,6 +231,7 @@ namespace AgenziaSpedizioni.Controllers
         }
 
         // POST: Spedizione/Delete/5
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public ActionResult Delete(int id, Spedizione formSpedizione)
         {
@@ -272,12 +271,45 @@ namespace AgenziaSpedizioni.Controllers
             return RedirectToAction("Index");
         }
 
-        //    __  __   ______   _______    ____    _____    _____ 
-        //   |  \/  | |  ____| |__   __|  / __ \  |  __ \  |_   _|
-        //   | \  / | | |__       | |    | |  | | | |  | |   | |  
-        //   | |\/| | |  __|      | |    | |  | | | |  | |   | |  
-        //   | |  | | | |____     | |    | |__| | | |__| |  _| |_ 
-        //   |_|  |_| |______|    |_|     \____/  |_____/  |_____|
+
+        //   __  __   ______   _______    ____    _____    _____                 _____  __     __  _   _    _____ 
+        //  |  \/  | |  ____| |__   __|  / __ \  |  __ \  |_   _|       /\      / ____| \ \   / / | \ | |  / ____|
+        //  | \  / | | |__       | |    | |  | | | |  | |   | |        /  \    | (___    \ \_/ /  |  \| | | |     
+        //  | |\/| | |  __|      | |    | |  | | | |  | |   | |       / /\ \    \___ \    \   /   | . ` | | |     
+        //  | |  | | | |____     | |    | |__| | | |__| |  _| |_     / ____ \   ____) |    | |    | |\  | | |____ 
+        //  |_|  |_| |______|    |_|     \____/  |_____/  |_____|   /_/    \_\ |_____/     |_|    |_| \_|  \_____|
+
+
+        // metodo asincrono per ottenere le spedizioni in consegna oggi
+        // restuisce un json con le spedizioni in consegna oggi
+        // GET: Spedizione/GetInConsegnaOggi
+        public JsonResult GetInConsegnaOggi()
+        {
+            // ottieni lista spedizioni in consegna oggi
+            List<Spedizione> spedizioni = Utility.GetSpedizioniInConsegnaOggi();
+            return Json(spedizioni, JsonRequestBehavior.AllowGet);
+        }
+
+        // metodo asincrono per ottenere il totale delle spedizioni in consegna oggi
+        // restuisce un json con il totale delle spedizioni in consegna oggi
+        // GET: Spedizione/GetTotaleInConsegnaOggi
+        public JsonResult GetTotaleInConsegnaOggi()
+        {
+            // ottieni totale spedizioni in consegna oggi
+            int totale = Utility.GetSpedizioniInConsegnaOggi().Count;
+            return Json(totale, JsonRequestBehavior.AllowGet);
+        }
+
+        // metodo asincrono per ottenere le consegne per citta
+        // restuisce un json con le consegne per citta
+        // GET: Spedizione/GetConsegnePerCitta
+        public JsonResult GetConsegnePerCitta(string id)
+        {
+            // ottieni consegne per citta
+            List<Spedizione> spedizioni = Utility.GetSpedizioniInConsegnaPerCitta(id);
+            return Json(spedizioni, JsonRequestBehavior.AllowGet);
+
+        }
 
     }
 }

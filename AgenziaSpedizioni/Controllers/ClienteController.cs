@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace AgenziaSpedizioni.Controllers
 {
+    [Authorize]
     public class ClienteController : Controller
     {
         //                _____   _______   _____    ____    _   _    _____ 
@@ -164,6 +165,7 @@ namespace AgenziaSpedizioni.Controllers
         }
 
         // GET: Cliente/Delete/5
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id)
         {
             Cliente cliente = Utility.GetClienteById(id);
@@ -176,6 +178,7 @@ namespace AgenziaSpedizioni.Controllers
 
         // POST: Cliente/Delete/5
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public ActionResult Delete(int id, FormCollection collection)
         {
             using (SqlConnection conn = Connection.GetConn())
