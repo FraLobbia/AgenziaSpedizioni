@@ -335,5 +335,134 @@ namespace AgenziaSpedizioni.Models
 
             return id;
         }
+
+        // Metodo asincrono per avere tutte le spedizioni in consegna oggi
+        // Non riceve parametri
+        // Restituisce una lista di oggetti Spedizione
+        public static List<Spedizione> GetSpedizioniInConsegnaOggi()
+        {
+            // crea lista di spedizioni
+            List<Spedizione> spedizioni = new List<Spedizione>();
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Spedizioni WHERE DataConsegnaPrevista = @DataConsegnaPrevista", conn);
+                    cmd.Parameters.AddWithValue("@DataConsegnaPrevista", DateTime.Today);
+                    // esegui comando
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    // leggi risultati
+                    while (reader.Read())
+                    {
+                        // crea oggetto spedizione
+                        Spedizione spedizione = new Spedizione();
+                        spedizione.Id = Convert.ToInt32(reader["Id"]);
+                        spedizione.ClienteId = Convert.ToInt32(reader["ClienteId"]);
+                        spedizione.NumeroIdentificativo = reader["NumeroIdentificativo"].ToString();
+                        spedizione.DataSpedizione = Convert.ToDateTime(reader["DataSpedizione"]);
+                        spedizione.Peso = Convert.ToDecimal(reader["Peso"]);
+                        spedizione.CittaDestinataria = reader["CittaDestinataria"].ToString();
+                        spedizione.IndirizzoDestinatario = reader["IndirizzoDestinatario"].ToString();
+                        spedizione.NominativoDestinatario = reader["NominativoDestinatario"].ToString();
+                        spedizione.Costo = Convert.ToDecimal(reader["Costo"]);
+                        spedizione.DataConsegnaPrevista = Convert.ToDateTime(reader["DataConsegnaPrevista"]);
+                        // aggiungi spedizione alla lista
+                        spedizioni.Add(spedizione);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Spedizione msgErrore = new Spedizione();
+                    msgErrore.Messaggio = "Errore: " + ex.Message;
+                    spedizioni.Add(msgErrore);
+                }
+            }
+
+            return spedizioni;
+        }
+
+        // metodo per ottenere la lista delle spedizioni in consegna per una determinata città
+        // Riceve una stringa città
+        // Restituisce una lista di oggetti Spedizione
+        public static List<Spedizione> GetSpedizioniInConsegnaPerCitta(string citta)
+        {
+            // crea lista di spedizioni
+            List<Spedizione> spedizioni = new List<Spedizione>();
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("SELECT * FROM Spedizioni WHERE CittaDestinataria = @CittaDestinataria", conn);
+                    cmd.Parameters.AddWithValue("@CittaDestinataria", citta);
+                    // esegui comando
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    // leggi risultati
+                    while (reader.Read())
+                    {
+                        // crea oggetto spedizione
+                        Spedizione spedizione = new Spedizione();
+                        spedizione.Id = Convert.ToInt32(reader["Id"]);
+                        spedizione.ClienteId = Convert.ToInt32(reader["ClienteId"]);
+                        spedizione.NumeroIdentificativo = reader["NumeroIdentificativo"].ToString();
+                        spedizione.DataSpedizione = Convert.ToDateTime(reader["DataSpedizione"]);
+                        spedizione.Peso = Convert.ToDecimal(reader["Peso"]);
+                        spedizione.CittaDestinataria = reader["CittaDestinataria"].ToString();
+                        spedizione.IndirizzoDestinatario = reader["IndirizzoDestinatario"].ToString();
+                        spedizione.NominativoDestinatario = reader["NominativoDestinatario"].ToString();
+                        spedizione.Costo = Convert.ToDecimal(reader["Costo"]);
+                        spedizione.DataConsegnaPrevista = Convert.ToDateTime(reader["DataConsegnaPrevista"]);
+                        // aggiungi spedizione alla lista
+                        spedizioni.Add(spedizione);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Spedizione msgErrore = new Spedizione();
+                    msgErrore.Messaggio = "Errore: " + ex.Message;
+                    spedizioni.Add(msgErrore);
+                }
+            }
+
+            return spedizioni;
+        }
+
+        // Metodo per ottenere una lista univoca delle città destinatarie
+        // Non riceve parametri
+        // Restituisce una lista di stringhe
+        public static List<string> GetCittaDestinatarie()
+        {
+            // crea lista di stringhe
+            List<string> citta = new List<string>();
+
+            using (SqlConnection conn = Connection.GetConn())
+            {
+                try
+                {
+                    conn.Open();
+                    // crea comando
+                    SqlCommand cmd = new SqlCommand("SELECT DISTINCT CittaDestinataria FROM Spedizioni", conn);
+                    // esegui comando
+                    SqlDataReader reader = cmd.ExecuteReader();
+                    // leggi risultati
+                    while (reader.Read())
+                    {
+                        // aggiungi città alla lista
+                        citta.Add(reader["CittaDestinataria"].ToString());
+                    }
+                }
+                catch (Exception ex)
+                {
+                    citta.Add("Errore: " + ex.Message);
+                }
+            }
+
+            return citta;
+        }
     }
 }

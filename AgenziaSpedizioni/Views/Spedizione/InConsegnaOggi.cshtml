@@ -1,13 +1,12 @@
 ﻿@model IEnumerable<AgenziaSpedizioni.Models.Spedizione>
 
 @{
-    ViewBag.Title = "Elenco spedizioni";
-    ViewBag.msgErrore = TempData["msgErrore"];
-    ViewBag.msgSuccess = TempData["msgSuccess"];
+    ViewBag.Title = "InConsegnaOggi";
+    // ottengo il totale delle spedizioni in consegna oggi
+    int totale = Model.Count();
 }
 
-<h1>Elenco delle spedizione</h1>
-
+<h1>In consegna oggi</h1>
 
 @if (ViewBag.msgErrore != null)
 {
@@ -22,9 +21,9 @@
     </div>
 }
 
-@Html.ActionLink("Crea nuova spedizione", "Create", null, new { @class = "btn btn-success" })
-@Html.ActionLink("Spedizioni in consegna oggi", "InConsegnaOggi", null, new { @class = "btn btn-primary mx-4" })
+<h2>Oggi è @DateTime.Today e ci sono @totale spedizioni programmate</h2>
 
+@Html.ActionLink("Torna a elenco", "Index", null, new { @class = "btn btn-primary" })
 
 <table class="table">
     <tr>
@@ -53,7 +52,7 @@
             @Html.DisplayNameFor(model => model.Costo)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.DataConsegnaPrevista)
+            @Html.DisplayNameFor(model => model.nomeCliente)
         </th>
         <th></th>
     </tr>
@@ -85,17 +84,14 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Costo)
             </td>
+
             <td>
-                @Html.DisplayFor(modelItem => item.DataConsegnaPrevista)
+                @Html.DisplayFor(modelItem => item.nomeCliente)
             </td>
             <td>
-                <div>
-
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-warning  m-0" })
-                    @Html.ActionLink("Details", "Status", new { id = item.Id }, new { @class = "btn btn-outline-secondary m-0" })
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger  m-0" })
-                    @Html.ActionLink("Aggiorna stato", "Create", "Aggiornamenti", new { id = item.Id }, new { @class = "btn btn-success m-0 text-nowrap" })
-                </div>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "btn btn-outline-warning  m-0" })
+                @Html.ActionLink("Details", "Status", new { id = item.Id }, new { @class = "btn btn-outline-secondary m-0" })
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "btn btn-outline-danger  m-0" })
             </td>
         </tr>
     }

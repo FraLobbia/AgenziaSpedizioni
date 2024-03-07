@@ -53,5 +53,17 @@ namespace AgenziaSpedizioni.Models
 
         [ScaffoldColumn(false)]
         public string Messaggio { get; set; }
+
+        [Display(Name = "Nome Cliente")]
+        public string nomeCliente
+        {
+            get
+            {
+                string nomeCliente = Utility.GetClienteById(ClienteId).Nome;
+                return nomeCliente;
+            }
+
+        }
+
     }
 }

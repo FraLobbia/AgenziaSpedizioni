@@ -20,7 +20,21 @@ namespace AgenziaSpedizioni.Controllers
         {
             // ottieni lista spedizioni
             List<Spedizione> spedizioni = Utility.GetListaSpedizioni();
+
             return View(spedizioni);
+        }
+
+        public ActionResult InConsegnaOggi()
+        {
+            // ottieni lista spedizioni in consegna oggi
+            List<Spedizione> spedizioni = Utility.GetSpedizioniInConsegnaOggi();
+            return View(spedizioni);
+        }
+
+        public ActionResult InConsegnaPerCitta()
+        {
+            // todo: implementare
+            return View();
         }
 
         // GET: Spedizione/Status/5
